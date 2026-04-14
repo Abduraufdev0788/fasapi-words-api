@@ -9,3 +9,6 @@ app = FastAPI(title="Vocabulary API", version="1.0")
 
 app.include_router(words.router)
 
+@app.get("/")
+def read_root():
+    return {"message": "Welcome to the Vocabulary API!"}

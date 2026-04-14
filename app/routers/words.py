@@ -8,8 +8,8 @@ from app.schemas.words import WordCreate, WordUpdate, AssetUpdate, WordResponse
 router = APIRouter(prefix="/v1", tags=["words"])
 
 
-@router.post("/vocabulary", response_model=WordCreate)
-def create_word(word: WordCreate, db: Session = Depends(get_db)):
+@router.post("/vocabulary", response_model=WordResponse)
+async def create_word(word: WordCreate, db: Session = Depends(get_db)):
     db_word = Vocabulary(
         english_word=word.english_word,
         part_of_speech=word.part_of_speech,
@@ -25,7 +25,7 @@ def create_word(word: WordCreate, db: Session = Depends(get_db)):
     return db_word
 
 @router.get("/vocabulary/{word_id}", response_model=WordResponse)
-def get_word(word_id: int, db: Session = Depends(get_db)):
+async def get_word(word_id: int, db: Session = Depends(get_db)):
     word = db.query(Vocabulary).filter(Vocabulary.word_id == word_id).first()
 
     if not word:
@@ -35,7 +35,7 @@ def get_word(word_id: int, db: Session = Depends(get_db)):
 
 
 @router.patch("/vocabulary/{word_id}", response_model=WordResponse)
-def update_word(word_id: int, word: WordUpdate, db: Session = Depends(get_db)):
+async def update_word(word_id: int, word: WordUpdate, db: Session = Depends(get_db)):
     db_word = db.query(Vocabulary).filter(Vocabulary.word_id == word_id).first()
 
     if not db_word:
@@ -49,7 +49,7 @@ def update_word(word_id: int, word: WordUpdate, db: Session = Depends(get_db)):
     return db_word
 
 @router.patch("/vocabulary/{word_id}/assets", response_model=WordResponse)
-def update_word_assets(word_id: int, assets: AssetUpdate, db: Session = Depends(get_db)):
+async def update_word_assets(word_id: int, assets: AssetUpdate, db: Session = Depends(get_db)):
     db_word = db.query(Vocabulary).filter(Vocabulary.word_id == word_id).first()
 
     if not db_word:
@@ -63,7 +63,7 @@ def update_word_assets(word_id: int, assets: AssetUpdate, db: Session = Depends(
     return db_word
 
 @router.delete("/vocabulary/{word_id}")
-def delete_word(word_id: int, db: Session = Depends(get_db)):
+async def delete_word(word_id: int, db: Session = Depends(get_db)):
     db_word = db.query(Vocabulary).filter(Vocabulary.word_id == word_id).first()
 
     if not db_word:
