@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from uuid import UUID
 
 
 class WordCreate(BaseModel):
@@ -22,7 +23,7 @@ class AssetUpdate(BaseModel):
 
 
 class WordResponse(BaseModel):
-    word_id : int
+    word_id : UUID
     english_word : str
     part_of_speech : str | None = None
     raw_storage_url : str

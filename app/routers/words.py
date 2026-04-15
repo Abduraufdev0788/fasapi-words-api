@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from app.database.database import get_db
 from app.models.words import Vocabulary
 from app.schemas.words import WordCreate, WordUpdate, AssetUpdate, WordResponse
+from uuid import UUID
 
 
 router = APIRouter(prefix="/v1", tags=["words"])
@@ -25,7 +26,7 @@ async def create_word(word: WordCreate, db: Session = Depends(get_db)):
     return db_word
 
 @router.get("/vocabulary/{word_id}", response_model=WordResponse)
-async def get_word(word_id: int, db: Session = Depends(get_db)):
+async def get_word(word_id: UUID, db: Session = Depends(get_db)):
     word = db.query(Vocabulary).filter(Vocabulary.word_id == word_id).first()
 
     if not word:
@@ -35,7 +36,7 @@ async def get_word(word_id: int, db: Session = Depends(get_db)):
 
 
 @router.patch("/vocabulary/{word_id}", response_model=WordResponse)
-async def update_word(word_id: int, word: WordUpdate, db: Session = Depends(get_db)):
+async def update_word(word_id: UUID, word: WordUpdate, db: Session = Depends(get_db)):
     db_word = db.query(Vocabulary).filter(Vocabulary.word_id == word_id).first()
 
     if not db_word:
@@ -49,7 +50,7 @@ async def update_word(word_id: int, word: WordUpdate, db: Session = Depends(get_
     return db_word
 
 @router.patch("/vocabulary/{word_id}/assets", response_model=WordResponse)
-async def update_word_assets(word_id: int, assets: AssetUpdate, db: Session = Depends(get_db)):
+async def update_word_assets(word_id: UUID, assets: AssetUpdate, db: Session = Depends(get_db)):
     db_word = db.query(Vocabulary).filter(Vocabulary.word_id == word_id).first()
 
     if not db_word:
@@ -63,7 +64,7 @@ async def update_word_assets(word_id: int, assets: AssetUpdate, db: Session = De
     return db_word
 
 @router.delete("/vocabulary/{word_id}")
-async def delete_word(word_id: int, db: Session = Depends(get_db)):
+async def delete_word(word_id: UUID, db: Session = Depends(get_db)):
     db_word = db.query(Vocabulary).filter(Vocabulary.word_id == word_id).first()
 
     if not db_word:
