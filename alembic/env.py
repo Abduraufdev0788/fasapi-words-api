@@ -5,6 +5,8 @@ from sqlalchemy import pool
 
 from alembic import context
 
+from app.models.words import Vocabulary
+
 
 from app.database.database import Base, BASE_URL
 
